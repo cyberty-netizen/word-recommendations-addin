@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommendations Bank</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bloom:     #4A7C6F;
+    --bloom-lt:  #EAF2EF;
+    --bloom-dk:  #2E5249;
+    --cream:     #FAF8F4;
+    --surface:   #FFFFFF;
+    --border:    #E4DDD4;
+    --border-2:  #CFC8BE;
+    --text:      #1C1917;
+    --muted:     #6B6560;
+    --hint:      #9E9890;
+    --green:     #1D6B4A;
+    --green-lt:  #E8F5EE;
+    --amber:     #92550A;
+    --amber-lt:  #FEF3E2;
+    --red-lt:    #FDEAEA;
+    --red:       #8B1A1A;
+    --font:      'DM Sans', sans-serif;
+    --mono:      'DM Mono', monospace;
+    --r:         8px;
+  }
+
+  html, body {
+    font-family: var(--font);
+    background: var(--cream);
+    color: var(--text);
+    font-size: 13px;
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--bloom);
+    padding: 12px 14px 10px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; }
+  .header-title { font-size: 14px; font-weight: 500; color: #fff; letter-spacing: .01em; }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+  .settings-btn {
+    background: rgba(255,255,255,.15); border: none;
+    border-radius: 6px; padding: 5px 8px;
+    color: #fff; font-size: 12px; cursor: pointer;
+    font-family: var(--font);
+  }
+  .settings-btn:hover { background: rgba(255,255,255,.25); }
+
+  /* ── Search ── */
+  .search-wrap { padding: 10px 12px 0; }
+  .search-input {
+    width: 100%; padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    font-family: var(--font); font-size: 12px;
+    background: var(--surface);
+    outline: none; transition: border-color .15s;
+  }
+  .search-input:focus { border-color: var(--bloom); }
+
+  /* ── Filters ── */
+  .filters { padding: 8px 12px 0; display: flex; flex-direction: column; gap: 6px; }
+  .filter-row { display: flex; gap: 5px; flex-wrap: wrap; }
+  .filter-label { font-size: 10px; font-weight: 500; color: var(--hint); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+  .chip {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--muted); cursor: pointer; transition: all .12s;
+    font-family: var(--font);
+  }
+  .chip:hover { border-color: var(--bloom); color: var(--bloom); }
+  .chip.active { background: var(--bloom); border-color: var(--bloom); color: #fff; }
+
+  /* ── Count bar ── */
+  .count-bar {
+    padding: 8px 12px 4px;
+    font-size: 11px; color: var(--hint);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .count-bar button {
+    font-size: 11px; color: var(--hint); background: none;
+    border: none; cursor: pointer; font-family: var(--font);
+    padding: 0;
+  }
+  .count-bar button:hover { color: var(--bloom); }
+
+  /* ── List ── */
+  .rec-list { padding: 0 12px 80px; }
+  .rec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 10px 11px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    transition: border-color .12s, box-shadow .12s;
+    position: relative;
+  }
+  .rec-card:hover { border-color: var(--bloom); box-shadow: 0 2px 8px rgba(74,124,111,.1); }
+  .rec-card.selected { border-color: var(--bloom); border-width: 2px; box-shadow: 0 2px 12px rgba(74,124,111,.15); }
+
+  .rec-text { font-size: 12px; color: var(--text); line-height: 1.55; margin-bottom: 7px; }
+  .rec-plain {
+    font-size: 11px; color: var(--muted);
+    background: var(--cream);
+    border-radius: 5px; padding: 6px 8px;
+    line-height: 1.5; margin-bottom: 7px;
+    border-left: 2px solid var(--bloom);
+    display: none;
+  }
+  .rec-card.expanded .rec-plain { display: block; }
+
+  .rec-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 500; letter-spacing: .02em;
+  }
+  .tag-domain  { background: #EBF3FA; color: #185FA5; }
+  .tag-setting { background: #EDF4F2; color: #2E5249; }
+  .tag-diag    { background: #F2EEF8; color: #5B21B6; }
+  .tag-lang-fr { background: #FDEAEA; color: #8B1A1A; }
+  .tag-lang-en { background: #EBF3FA; color: #185FA5; }
+
+  .rec-actions {
+    display: none; margin-top: 8px;
+    gap: 6px; flex-wrap: wrap;
+  }
+  .rec-card.selected .rec-actions { display: flex; }
+
+  .btn {
+    font-size: 11px; padding: 5px 11px;
+    border-radius: 6px; cursor: pointer;
+    font-family: var(--font); font-weight: 500;
+    transition: all .12s; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+  }
+  .btn:hover { border-color: var(--bloom); color: var(--bloom); }
+  .btn-primary {
+    background: var(--bloom); color: #fff;
+    border-color: var(--bloom);
+  }
+  .btn-primary:hover { background: var(--bloom-dk); border-color: var(--bloom-dk); }
+  .btn-success { background: var(--green-lt); color: var(--green); border-color: var(--green); }
+
+  /* ── Empty / loading ── */
+  .state-msg {
+    text-align: center; padding: 2rem 1rem;
+    color: var(--hint); font-size: 12px; line-height: 1.6;
+  }
+  .spinner {
+    width: 20px; height: 20px; margin: 0 auto 10px;
+    border: 2px solid var(--border); border-top-color: var(--bloom);
+    border-radius: 50%; animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Settings panel ── */
+  .settings-panel {
+    display: none; position: fixed; inset: 0;
+    background: var(--cream); z-index: 100;
+    padding: 16px; overflow-y: auto;
+  }
+  .settings-panel.open { display: block; }
+  .settings-title { font-size: 15px; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .close-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--muted); padding: 0; }
+  .field-label { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; margin-top: 12px; }
+  .field-input {
+    width: 100%; padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: var(--r);
+    font-family: var(--font); font-size: 12px; background: var(--surface);
+    outline: none;
+  }
+  .field-input:focus { border-color: var(--bloom); }
+  .field-hint { font-size: 11px; color: var(--hint); margin-top: 4px; line-height: 1.5; }
+  .save-btn {
+    margin-top: 16px; width: 100%; padding: 9px;
+    background: var(--bloom); color: #fff;
+    border: none; border-radius: var(--r);
+    font-family: var(--font); font-size: 13px; font-weight: 500;
+    cursor: pointer;
+  }
+  .save-btn:hover { background: var(--bloom-dk); }
+  .status-msg {
+    margin-top: 8px; font-size: 11px; text-align: center;
+    padding: 6px; border-radius: 6px; display: none;
+  }
+  .status-msg.ok  { background: var(--green-lt);  color: var(--green); display: block; }
+  .status-msg.err { background: var(--red-lt); color: var(--red);   display: block; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: #fff;
+    font-size: 12px; padding: 8px 16px; border-radius: 20px;
+    opacity: 0; transition: opacity .2s; pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ── Insert bar ── */
+  .insert-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 10px 12px; display: none; gap: 8px;
+  }
+  .insert-bar.visible { display: flex; }
+  .insert-bar .btn { flex: 1; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- Settings panel -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-title">
+    Settings
+    <button class="close-btn" onclick="closeSettings()">✕</button>
+  </div>
+
+  <div class="field-label">Notion Integration Token</div>
+  <input class="field-input" type="password" id="notionToken" placeholder="secret_xxxxxxxxxxxx">
+  <div class="field-hint">Create an internal integration at notion.so/my-integrations. Share your Recommendations database with it.</div>
+
+  <div class="field-label">Recommendations Database ID</div>
+  <input class="field-input" type="text" id="notionDbId" placeholder="a93cb0d9cbff43249c11d55d5bee28cb">
+  <div class="field-hint">Found in your Notion database URL — the 32-character string after the last slash and before the ?v= parameter.</div>
+
+  <div class="field-label">Insert mode</div>
+  <select class="field-input" id="insertMode">
+    <option value="clinical">Clinical language (full recommendation)</option>
+    <option value="plain">Plain language version (parent-friendly)</option>
+    <option value="both">Both — clinical first, then plain language</option>
+  </select>
+
+  <button class="save-btn" onclick="saveSettings()">Save & Connect</button>
+  <div class="status-msg" id="settingsStatus"></div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Recommendations Bank</div>
+      <div class="header-sub" id="headerSub">Bloom Psychology Clinic</div>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">⚙ Setup</button>
+  </div>
+</div>
+
+<!-- Search -->
+<div class="search-wrap">
+  <input class="search-input" type="text" id="searchInput" placeholder="Search recommendations…" oninput="applyFilters()">
+</div>
+
+<!-- Filters -->
+<div class="filters">
+  <div>
+    <div class="filter-label">Domain</div>
+    <div class="filter-row" id="domainFilters"></div>
+  </div>
+  <div>
+    <div class="filter-label">Setting</div>
+    <div class="filter-row" id="settingFilters"></div>
+  </div>
+  <div>
+    <div class="filter-label">Language</div>
+    <div class="filter-row" id="langFilters"></div>
+  </div>
+</div>
+
+<!-- Count bar -->
+<div class="count-bar">
+  <span id="countLabel">Loading…</span>
+  <button onclick="clearFilters()">Clear filters</button>
+</div>
+
+<!-- Rec list -->
+<div class="rec-list" id="recList">
+  <div class="state-msg">
+    <div class="spinner"></div>
+    Loading recommendations…
+  </div>
+</div>
+
+<!-- Insert bar (shown when a rec is selected) -->
+<div class="insert-bar" id="insertBar">
+  <button class="btn btn-primary" onclick="insertSelected('clinical')">Insert clinical</button>
+  <button class="btn" onclick="insertSelected('plain')">Insert plain</button>
+  <button class="btn" onclick="insertSelected('both')">Insert both</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────
+const STORAGE_KEY_TOKEN = 'notion_token';
+const STORAGE_KEY_DB    = 'notion_db_id';
+const STORAGE_KEY_MODE  = 'insert_mode';
+
+let allRecs = [];
+let filtered = [];
+let selectedId = null;
+let activeFilters = { domain: null, setting: null, lang: null };
+let officeReady = false;
+
+// ── Office init ───────────────────────────────────────────────────────────
+Office.onReady(info => {
+  if (info.host === Office.HostType.Word) {
+    officeReady = true;
+  }
+  init();
+});
+
+function init() {
+  loadSettingsUI();
+  const token = localStorage.getItem(STORAGE_KEY_TOKEN);
+  const dbId  = localStorage.getItem(STORAGE_KEY_DB);
+  if (!token || !dbId) {
+    showNotConfigured();
+    return;
+  }
+  fetchRecs(token, dbId);
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────
+function openSettings() {
+  document.getElementById('notionToken').value = localStorage.getItem(STORAGE_KEY_TOKEN) || '';
+  document.getElementById('notionDbId').value  = localStorage.getItem(STORAGE_KEY_DB)    || '';
+  document.getElementById('insertMode').value  = localStorage.getItem(STORAGE_KEY_MODE)  || 'clinical';
+  document.getElementById('settingsPanel').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settingsPanel').classList.remove('open');
+}
+function loadSettingsUI() {
+  document.getElementById('insertMode').value = localStorage.getItem(STORAGE_KEY_MODE) || 'clinical';
+}
+function saveSettings() {
+  const token = document.getElementById('notionToken').value.trim();
+  const dbId  = document.getElementById('notionDbId').value.trim().replace(/-/g, '');
+  const mode  = document.getElementById('insertMode').value;
+  const status = document.getElementById('settingsStatus');
+
+  if (!token || !dbId) {
+    status.textContent = 'Please enter both the token and database ID.';
+    status.className = 'status-msg err';
+    return;
+  }
+
+  localStorage.setItem(STORAGE_KEY_TOKEN, token);
+  localStorage.setItem(STORAGE_KEY_DB,    dbId);
+  localStorage.setItem(STORAGE_KEY_MODE,  mode);
+
+  status.textContent = 'Saved. Connecting to Notion…';
+  status.className = 'status-msg ok';
+
+  setTimeout(() => {
+    closeSettings();
+    fetchRecs(token, dbId);
+  }, 800);
+}
+
+// ── Fetch from Notion ─────────────────────────────────────────────────────
+async function fetchRecs(token, dbId) {
+  setLoading(true);
+  try {
+    const pages = [];
+    let cursor = undefined;
+
+    // Paginate through all records
+    do {
+      const body = { page_size: 100, sorts: [{ property: 'Frequency Used', direction: 'descending' }] };
+      if (cursor) body.start_cursor = cursor;
+
+      const res = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Notion-Version': '2022-06-28',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || `Notion API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      pages.push(...data.results);
+      cursor = data.has_more ? data.next_cursor : undefined;
+    } while (cursor);
+
+    allRecs = pages.map(parseRec).filter(Boolean);
+    buildFilters();
+    applyFilters();
+    document.getElementById('headerSub').textContent = `${allRecs.length} recommendations loaded`;
+  } catch(e) {
+    showError(e.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function parseRec(page) {
+  const p = page.properties;
+  const title = p['Recommendation']?.title?.[0]?.plain_text || '';
+  if (!title) return null;
+
+  return {
+    id: page.id,
+    clinical: title,
+    plain:    p['Plain Language Version']?.rich_text?.[0]?.plain_text || '',
+    domain:   p['Domain']?.multi_select?.map(x => x.name) || [],
+    setting:  p['Setting']?.multi_select?.map(x => x.name) || [],
+    diag:     p['Diagnosis / Profile']?.multi_select?.map(x => x.name) || [],
+    lang:     p['Language']?.select?.name || 'English',
+    freq:     p['Frequency Used']?.number || 0,
+    evidence: p['Strength of Evidence']?.select?.name || '',
+    notes:    p['Notes']?.rich_text?.[0]?.plain_text || '',
+  };
+}
+
+// ── Filters ───────────────────────────────────────────────────────────────
+function buildFilters() {
+  const domains   = [...new Set(allRecs.flatMap(r => r.domain))].sort();
+  const settings  = [...new Set(allRecs.flatMap(r => r.setting))].sort();
+  const langs     = [...new Set(allRecs.map(r => r.lang))].sort();
+
+  renderChips('domainFilters',  domains,  'domain');
+  renderChips('settingFilters', settings, 'setting');
+  renderChips('langFilters',    langs,    'lang');
+}
+
+function renderChips(containerId, values, filterKey) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = values.map(v => `
+    <button class="chip" id="chip-${filterKey}-${v.replace(/\s/g,'-')}"
+      onclick="toggleFilter('${filterKey}','${v}')">${v}</button>
+  `).join('');
+}
+
+function toggleFilter(key, value) {
+  activeFilters[key] = activeFilters[key] === value ? null : value;
+  // Update chip styles
+  document.querySelectorAll(`[id^="chip-${key}-"]`).forEach(c => c.classList.remove('active'));
+  if (activeFilters[key]) {
+    const el = document.getElementById(`chip-${key}-${value.replace(/\s/g,'-')}`);
+    if (el) el.classList.add('active');
+  }
+  applyFilters();
+}
+
+function clearFilters() {
+  activeFilters = { domain: null, setting: null, lang: null };
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('searchInput').value = '';
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  filtered = allRecs.filter(r => {
+    if (activeFilters.domain  && !r.domain.includes(activeFilters.domain))   return false;
+    if (activeFilters.setting && !r.setting.includes(activeFilters.setting))  return false;
+    if (activeFilters.lang    && r.lang !== activeFilters.lang)               return false;
+    if (q && !r.clinical.toLowerCase().includes(q) && !r.plain.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('countLabel').textContent = `${filtered.length} recommendation${filtered.length !== 1 ? 's' : ''}`;
+  renderList();
+}
+
+// ── Render list ───────────────────────────────────────────────────────────
+function renderList() {
+  const el = document.getElementById('recList');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="state-msg">No recommendations match your filters.</div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(r => {
+    const isSelected = r.id === selectedId;
+    const domainTags = r.domain.slice(0,2).map(d => `<span class="tag tag-domain">${d}</span>`).join('');
+    const settingTags = r.setting.slice(0,2).map(s => `<span class="tag tag-setting">${s}</span>`).join('');
+    const langTag = r.lang === 'French'
+      ? `<span class="tag tag-lang-fr">FR</span>`
+      : r.lang === 'Both'
+        ? `<span class="tag tag-lang-en">EN</span><span class="tag tag-lang-fr">FR</span>`
+        : `<span class="tag tag-lang-en">EN</span>`;
+
+    return `
+      <div class="rec-card ${isSelected ? 'selected' : ''} ${isSelected ? 'expanded' : ''}"
+           id="card-${r.id}" onclick="selectRec('${r.id}')">
+        <div class="rec-text">${r.clinical}</div>
+        ${r.plain ? `<div class="rec-plain">💬 ${r.plain}</div>` : ''}
+        <div class="rec-tags">${domainTags}${settingTags}${langTag}</div>
+        ${isSelected ? `
+        <div class="rec-actions">
+          <button class="btn btn-primary" onclick="event.stopPropagation(); insertRec('${r.id}', 'clinical')">Insert clinical ↵</button>
+          ${r.plain ? `<button class="btn" onclick="event.stopPropagation(); insertRec('${r.id}', 'plain')">Insert plain</button>` : ''}
+          ${r.plain ? `<button class="btn" onclick="event.stopPropagation(); insertRec('${r.id}', 'both')">Insert both</button>` : ''}
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── Select ────────────────────────────────────────────────────────────────
+function selectRec(id) {
+  selectedId = selectedId === id ? null : id;
+  renderList();
+  if (selectedId) {
+    setTimeout(() => {
+      const card = document.getElementById(`card-${id}`);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+  }
+}
+
+// ── Insert into Word ──────────────────────────────────────────────────────
+async function insertRec(id, mode) {
+  const rec = allRecs.find(r => r.id === id);
+  if (!rec) return;
+
+  let text = '';
+  if (mode === 'clinical') text = rec.clinical;
+  else if (mode === 'plain') text = rec.plain || rec.clinical;
+  else if (mode === 'both') {
+    text = rec.clinical;
+    if (rec.plain) text += `\n\nIn plain language: ${rec.plain}`;
+  }
+
+  if (!officeReady) {
+    // Fallback: copy to clipboard
+    await navigator.clipboard.writeText(text);
+    showToast('Copied to clipboard — paste into Word');
+    return;
+  }
+
+  try {
+    await Word.run(async context => {
+      const sel = context.document.getSelection();
+      sel.insertText(text, Word.InsertLocation.replace);
+      await context.sync();
+    });
+    showToast('Inserted ✓');
+  } catch(e) {
+    // Clipboard fallback
+    await navigator.clipboard.writeText(text);
+    showToast('Copied to clipboard — paste into Word');
+  }
+}
+
+function insertSelected(mode) {
+  if (selectedId) insertRec(selectedId, mode);
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────
+function setLoading(on) {
+  if (on) {
+    document.getElementById('recList').innerHTML =
+      '<div class="state-msg"><div class="spinner"></div>Loading recommendations…</div>';
+  }
+}
+
+function showNotConfigured() {
+  document.getElementById('recList').innerHTML = `
+    <div class="state-msg">
+      <div style="font-size:28px; margin-bottom:10px;">📋</div>
+      <strong>Setup required</strong><br><br>
+      Click <strong>⚙ Setup</strong> above to connect your Notion database.
+    </div>`;
+  document.getElementById('countLabel').textContent = 'Not connected';
+}
+
+function showError(msg) {
+  document.getElementById('recList').innerHTML = `
+    <div class="state-msg">
+      <div style="color:#8B1A1A; margin-bottom:8px;">⚠ Connection error</div>
+      <div style="font-size:11px;">${msg}</div><br>
+      <button class="btn" onclick="openSettings()" style="margin:0 auto;">Open Settings</button>
+    </div>`;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
