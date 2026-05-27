@@ -338,7 +338,7 @@ body {
   <div class="header-inner">
     <div class="header-text">
       <h1>Recommendations Bank</h1>
-      <p id="headerSub">Bloom Psychology Clinic</p>
+      <p id="headerSub">Sophie Ty</p>
     </div>
     <div class="header-actions">
       <button class="icon-btn" title="Refresh" onclick="refresh()">↻</button>
@@ -470,7 +470,7 @@ async function fetchRecs(token, db) {
 
     allRecs = pages.map(parseRec).filter(Boolean);
     document.getElementById('headerSub').textContent =
-      `${allRecs.length} recommendations · Bloom Psychology`;
+      `${allRecs.length} recommendations · Sophie Ty`;
     buildFilters();
     applyFilters();
   } catch(e) {
