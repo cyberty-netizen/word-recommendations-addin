@@ -8,337 +8,138 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:        #F5F2ED;
-  --surface:   #FDFCFA;
-  --border:    #E2DAD0;
-  --border2:   #CEC5B8;
-  --text:      #1A1714;
-  --muted:     #6B6358;
-  --hint:      #A09588;
-  --bloom:     #3D6B5E;
-  --bloom-lt:  #E8F0EE;
-  --bloom-dk:  #274840;
-  --gold:      #8B6914;
-  --gold-lt:   #FBF3DF;
-  --red:       #7A1F1F;
-  --red-lt:    #FBE8E8;
-  --purple:    #4A2D7A;
-  --purple-lt: #EEE8F8;
-  --slate:     #2A4A6B;
-  --slate-lt:  #E6EDF5;
-  --font:      'DM Sans', sans-serif;
-  --serif:     'Lora', Georgia, serif;
-  --mono:      'DM Mono', monospace;
-  --r:         9px;
-  --shadow:    0 2px 8px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --bg:#F5F2ED; --surface:#FDFCFA; --border:#E2DAD0; --text:#1A1714;
+  --muted:#6B6358; --hint:#A09588; --bloom:#3D6B5E; --bloom-lt:#E8F0EE;
+  --bloom-dk:#274840; --gold:#8B6914; --gold-lt:#FBF3DF;
+  --red:#7A1F1F; --red-lt:#FBE8E8; --purple:#4A2D7A; --purple-lt:#EEE8F8;
+  --slate:#2A4A6B; --slate-lt:#E6EDF5;
+  --font:'DM Sans',sans-serif; --serif:'Lora',Georgia,serif;
+  --mono:'DM Mono',monospace; --r:9px;
 }
-
 html { font-size: 13px; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+body { font-family:var(--font); background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
 
-/* ── Header ── */
-.header {
-  background: var(--bloom-dk);
-  padding: 14px 16px 12px;
-  position: sticky; top: 0; z-index: 20;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.header-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.header-text h1 {
-  font-family: var(--serif); font-size: 17px; font-weight: 400;
-  color: #FDFCFA; letter-spacing: .01em;
-}
-.header-text p { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 3px; }
-.header-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.icon-btn {
-  background: rgba(255,255,255,.1); border: none;
-  border-radius: 7px; width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: rgba(255,255,255,.8); font-size: 15px;
-  transition: background .15s;
-}
-.icon-btn:hover { background: rgba(255,255,255,.2); }
+.header { background:var(--bloom-dk); padding:14px 16px 12px; position:sticky; top:0; z-index:20; }
+.header-inner { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.header-text h1 { font-family:var(--serif); font-size:17px; font-weight:400; color:#FDFCFA; }
+.header-text p { font-size:11px; color:rgba(255,255,255,.5); margin-top:3px; }
+.header-actions { display:flex; gap:6px; flex-shrink:0; }
+.icon-btn { background:rgba(255,255,255,.1); border:none; border-radius:7px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:rgba(255,255,255,.8); font-size:15px; transition:background .15s; }
+.icon-btn:hover { background:rgba(255,255,255,.2); }
 
-/* ── Search ── */
-.search-section { padding: 12px 14px 0; }
-.search-wrap { position: relative; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--hint); font-size: 14px; pointer-events: none; }
-.search-input {
-  width: 100%; padding: 8px 10px 8px 32px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); font-family: var(--font); font-size: 12px;
-  color: var(--text); outline: none; transition: border-color .15s;
-}
-.search-input:focus { border-color: var(--bloom); }
-.search-input::placeholder { color: var(--hint); }
+.search-section { padding:12px 14px 0; }
+.search-wrap { position:relative; }
+.search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--hint); pointer-events:none; }
+.search-input { width:100%; padding:8px 10px 8px 30px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r); font-family:var(--font); font-size:12px; color:var(--text); outline:none; transition:border-color .15s; }
+.search-input:focus { border-color:var(--bloom); }
+.search-input::placeholder { color:var(--hint); }
 
-/* ── Filters ── */
-.filters { padding: 10px 14px 0; display: flex; flex-direction: column; gap: 7px; }
-.filter-group { }
-.filter-label {
-  font-size: 10px; font-weight: 500; color: var(--hint);
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px;
-}
-.chips { display: flex; flex-wrap: wrap; gap: 4px; }
-.chip {
-  font-size: 11px; padding: 3px 10px; border-radius: 20px;
-  border: 1px solid var(--border); background: var(--surface);
-  color: var(--muted); cursor: pointer; transition: all .12s;
-  font-family: var(--font); line-height: 1.4;
-  user-select: none;
-}
-.chip:hover { border-color: var(--bloom); color: var(--bloom); background: var(--bloom-lt); }
-.chip.active { background: var(--bloom); border-color: var(--bloom); color: #fff; font-weight: 500; }
+.filters { padding:10px 14px 0; display:flex; flex-direction:column; gap:7px; }
+.filter-label { font-size:10px; font-weight:500; color:var(--hint); text-transform:uppercase; letter-spacing:.08em; margin-bottom:5px; }
+.chips { display:flex; flex-wrap:wrap; gap:4px; }
+.chip { font-size:11px; padding:3px 10px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:var(--muted); cursor:pointer; transition:all .12s; font-family:var(--font); user-select:none; }
+.chip:hover { border-color:var(--bloom); color:var(--bloom); background:var(--bloom-lt); }
+.chip.active { background:var(--bloom); border-color:var(--bloom); color:#fff; font-weight:500; }
 
-/* ── Toolbar ── */
-.toolbar {
-  padding: 8px 14px 4px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-.count { font-size: 11px; color: var(--hint); }
-.clear-btn {
-  font-size: 11px; color: var(--hint); background: none;
-  border: none; cursor: pointer; font-family: var(--font);
-  padding: 2px 6px; border-radius: 4px;
-  transition: all .12s;
-}
-.clear-btn:hover { color: var(--bloom); background: var(--bloom-lt); }
+.toolbar { padding:8px 14px 4px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+.count { font-size:11px; color:var(--hint); }
+.clear-btn { font-size:11px; color:var(--hint); background:none; border:none; cursor:pointer; font-family:var(--font); padding:2px 6px; border-radius:4px; transition:all .12s; }
+.clear-btn:hover { color:var(--bloom); background:var(--bloom-lt); }
 
-/* ── List ── */
-.rec-list { flex: 1; padding: 10px 14px 24px; overflow-y: auto; }
+.rec-list { flex:1; padding:10px 14px 80px; overflow-y:auto; }
+.rec-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:11px 13px; margin-bottom:8px; cursor:pointer; transition:border-color .12s,box-shadow .12s,transform .1s; }
+.rec-card:hover { border-color:var(--bloom); box-shadow:0 3px 12px rgba(61,107,94,.12); transform:translateY(-1px); }
+.rec-card.open { border-color:var(--bloom); border-width:1.5px; box-shadow:0 4px 16px rgba(61,107,94,.14); }
+.rec-clinical { font-size:12.5px; color:var(--text); line-height:1.6; margin-bottom:8px; font-family:var(--serif); font-style:italic; }
+.rec-plain { font-size:12px; color:var(--muted); background:var(--bloom-lt); border-radius:6px; padding:7px 9px; line-height:1.55; margin-bottom:8px; border-left:2px solid var(--bloom); display:none; }
+.rec-card.open .rec-plain { display:block; }
+.rec-plain-label { font-size:10px; font-weight:500; color:var(--bloom); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px; }
+.rec-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.tag { font-size:10px; padding:2px 7px; border-radius:4px; font-weight:500; }
+.t-domain { background:var(--slate-lt); color:var(--slate); }
+.t-setting { background:var(--bloom-lt); color:var(--bloom-dk); }
+.t-lang-fr { background:var(--red-lt); color:var(--red); }
+.t-lang-en { background:var(--slate-lt); color:var(--slate); }
+.t-freq { background:var(--gold-lt); color:var(--gold); }
 
-.rec-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 11px 13px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: border-color .12s, box-shadow .12s, transform .1s;
-  position: relative;
-}
-.rec-card:hover {
-  border-color: var(--bloom);
-  box-shadow: 0 3px 12px rgba(61,107,94,.12);
-  transform: translateY(-1px);
-}
-.rec-card.open {
-  border-color: var(--bloom);
-  border-width: 1.5px;
-  box-shadow: 0 4px 16px rgba(61,107,94,.14);
-}
+.rec-actions { display:none; margin-top:10px; gap:6px; flex-wrap:wrap; padding-top:8px; border-top:1px solid var(--border); }
+.rec-card.open .rec-actions { display:flex; }
+.action-btn { font-size:11px; padding:5px 12px; border-radius:6px; cursor:pointer; font-family:var(--font); font-weight:500; transition:all .12s; border:1px solid var(--border); background:var(--surface); color:var(--muted); }
+.action-btn:hover { border-color:var(--bloom); color:var(--bloom); }
+.action-btn.primary { background:var(--bloom); color:#fff; border-color:var(--bloom); }
+.action-btn.primary:hover { background:var(--bloom-dk); }
+.action-btn.copied { background:#E8F5EE; color:#1D6B4A; border-color:#1D6B4A; }
 
-.rec-clinical {
-  font-size: 12.5px; color: var(--text);
-  line-height: 1.6; margin-bottom: 8px;
-  font-family: var(--serif); font-style: italic;
-}
-.rec-plain {
-  font-size: 12px; color: var(--muted);
-  background: var(--bloom-lt);
-  border-radius: 6px; padding: 7px 9px;
-  line-height: 1.55; margin-bottom: 8px;
-  border-left: 2px solid var(--bloom);
-  display: none;
-}
-.rec-card.open .rec-plain { display: block; }
-.rec-plain-label { font-size: 10px; font-weight: 500; color: var(--bloom); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+.state { text-align:center; padding:3rem 1rem; color:var(--hint); line-height:1.7; }
+.state-icon { font-size:36px; margin-bottom:12px; }
+.state h3 { font-family:var(--serif); font-size:16px; color:var(--muted); font-weight:400; margin-bottom:8px; }
+.state p { font-size:12px; max-width:260px; margin:0 auto; }
+.spinner { width:24px; height:24px; margin:0 auto 14px; border:2px solid var(--border); border-top-color:var(--bloom); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-.rec-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0; }
-.tag {
-  font-size: 10px; padding: 2px 7px; border-radius: 4px;
-  font-weight: 500; letter-spacing: .02em; line-height: 1.5;
-}
-.t-domain  { background: var(--slate-lt);  color: var(--slate); }
-.t-setting { background: var(--bloom-lt);  color: var(--bloom-dk); }
-.t-diag    { background: var(--purple-lt); color: var(--purple); }
-.t-lang-fr { background: var(--red-lt);    color: var(--red); }
-.t-lang-en { background: var(--slate-lt);  color: var(--slate); }
-.t-freq    { background: var(--gold-lt);   color: var(--gold); }
+.setup-panel { display:none; position:fixed; inset:0; z-index:100; background:var(--bg); overflow-y:auto; padding:16px; }
+.setup-panel.open { display:block; }
+.setup-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.setup-header h2 { font-family:var(--serif); font-size:18px; font-weight:400; }
+.close-btn { background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); padding:2px 6px; border-radius:5px; }
+.close-btn:hover { background:var(--border); }
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+.field input, .field select { width:100%; padding:9px 11px; border:1px solid var(--border); border-radius:var(--r); font-family:var(--font); font-size:12px; background:var(--surface); color:var(--text); outline:none; }
+.field input:focus, .field select:focus { border-color:var(--bloom); }
+.field-hint { font-size:11px; color:var(--hint); margin-top:4px; line-height:1.55; }
+.setup-save { width:100%; padding:10px; margin-top:6px; background:var(--bloom); color:#fff; border:none; border-radius:var(--r); font-family:var(--font); font-size:13px; font-weight:500; cursor:pointer; }
+.setup-save:hover { background:var(--bloom-dk); }
+.setup-status { margin-top:8px; font-size:11px; text-align:center; padding:7px; border-radius:6px; display:none; }
+.setup-status.ok { background:#E8F5EE; color:#1D6B4A; display:block; }
+.setup-status.err { background:var(--red-lt); color:var(--red); display:block; }
+.setup-info { background:var(--gold-lt); border:1px solid #E8D48A; border-radius:var(--r); padding:10px 12px; font-size:11px; color:var(--gold); line-height:1.6; margin-bottom:14px; }
+.setup-info strong { display:block; margin-bottom:4px; font-size:12px; }
 
-/* ── Actions (shown when open) ── */
-.rec-actions {
-  display: none; margin-top: 10px; gap: 6px; flex-wrap: wrap;
-  padding-top: 8px; border-top: 1px solid var(--border);
-}
-.rec-card.open .rec-actions { display: flex; }
-
-.action-btn {
-  font-size: 11px; padding: 5px 12px; border-radius: 6px;
-  cursor: pointer; font-family: var(--font); font-weight: 500;
-  transition: all .12s; border: 1px solid var(--border);
-  background: var(--surface); color: var(--muted);
-  display: flex; align-items: center; gap: 5px;
-}
-.action-btn:hover { border-color: var(--bloom); color: var(--bloom); }
-.action-btn.primary {
-  background: var(--bloom); color: #fff; border-color: var(--bloom);
-}
-.action-btn.primary:hover { background: var(--bloom-dk); border-color: var(--bloom-dk); }
-.action-btn.copied {
-  background: #E8F5EE; color: #1D6B4A; border-color: #1D6B4A;
-}
-
-/* ── Empty / loading states ── */
-.state {
-  text-align: center; padding: 3rem 1rem;
-  color: var(--hint); line-height: 1.7;
-}
-.state-icon { font-size: 36px; margin-bottom: 12px; }
-.state h3 { font-family: var(--serif); font-size: 16px; color: var(--muted); font-weight: 400; margin-bottom: 8px; }
-.state p { font-size: 12px; max-width: 260px; margin: 0 auto; }
-.spinner {
-  width: 24px; height: 24px; margin: 0 auto 14px;
-  border: 2px solid var(--border); border-top-color: var(--bloom);
-  border-radius: 50%; animation: spin .7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Setup panel ── */
-.setup-panel {
-  display: none; position: fixed; inset: 0; z-index: 100;
-  background: var(--bg); overflow-y: auto; padding: 16px;
-  animation: slideUp .2s ease;
-}
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
-.setup-panel.open { display: block; }
-
-.setup-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 18px;
-}
-.setup-header h2 { font-family: var(--serif); font-size: 18px; font-weight: 400; }
-.close-btn {
-  background: none; border: none; font-size: 20px; cursor: pointer;
-  color: var(--muted); padding: 2px 6px; border-radius: 5px;
-}
-.close-btn:hover { background: var(--border); }
-
-.field { margin-bottom: 14px; }
-.field label {
-  display: block; font-size: 11px; font-weight: 500;
-  color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
-  margin-bottom: 5px;
-}
-.field input, .field select {
-  width: 100%; padding: 9px 11px;
-  border: 1px solid var(--border); border-radius: var(--r);
-  font-family: var(--font); font-size: 12px; background: var(--surface);
-  color: var(--text); outline: none; transition: border-color .15s;
-}
-.field input:focus, .field select:focus { border-color: var(--bloom); }
-.field-hint { font-size: 11px; color: var(--hint); margin-top: 4px; line-height: 1.55; }
-
-.setup-save {
-  width: 100%; padding: 10px; margin-top: 6px;
-  background: var(--bloom); color: #fff;
-  border: none; border-radius: var(--r);
-  font-family: var(--font); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: background .15s;
-}
-.setup-save:hover { background: var(--bloom-dk); }
-
-.setup-status {
-  margin-top: 8px; font-size: 11px; text-align: center;
-  padding: 7px; border-radius: 6px; display: none;
-}
-.setup-status.ok  { background: #E8F5EE; color: #1D6B4A; display: block; }
-.setup-status.err { background: var(--red-lt); color: var(--red); display: block; }
-
-.setup-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-.setup-info {
-  background: var(--gold-lt); border: 1px solid #E8D48A;
-  border-radius: var(--r); padding: 10px 12px; font-size: 11px;
-  color: var(--gold); line-height: 1.6;
-}
-.setup-info strong { display: block; margin-bottom: 4px; font-size: 12px; }
-.setup-info code {
-  font-family: var(--mono); background: rgba(0,0,0,.06);
-  padding: 1px 4px; border-radius: 3px; font-size: 11px;
-}
-
-/* ── Toast ── */
-.toast {
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(10px);
-  background: var(--bloom-dk); color: #fff;
-  font-size: 12px; padding: 9px 18px; border-radius: 20px;
-  opacity: 0; transition: all .2s; pointer-events: none;
-  white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,.2);
-  z-index: 200;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── How to use bar ── */
-.how-to {
-  background: var(--gold-lt); border-top: 1px solid #E8D48A;
-  padding: 8px 14px; font-size: 11px; color: var(--gold);
-  display: flex; align-items: center; gap: 6px;
-  position: sticky; bottom: 0;
-}
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--bloom-dk); color:#fff; font-size:12px; padding:9px 18px; border-radius:20px; opacity:0; transition:all .2s; pointer-events:none; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:200; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.how-to { background:var(--gold-lt); border-top:1px solid #E8D48A; padding:8px 14px; font-size:11px; color:var(--gold); position:sticky; bottom:0; }
 </style>
 </head>
 <body>
 
-<!-- Setup panel -->
 <div class="setup-panel" id="setupPanel">
   <div class="setup-header">
     <h2>Connect to Notion</h2>
     <button class="close-btn" onclick="closeSetup()">✕</button>
   </div>
-
   <div class="setup-info">
-    <strong>📋 Your database ID is already filled in</strong>
-    You only need to create a Notion Integration Token and paste it below.
+    <strong>Your database ID is pre-filled.</strong>
+    You only need your Notion Integration Token below.
   </div>
-
-  <hr class="setup-divider">
-
   <div class="field">
     <label>Notion Integration Token</label>
-    <input type="password" id="tokenInput" placeholder="secret_xxxxxxxxxxxxxxxx">
-    <div class="field-hint">
-      1. Go to <strong>notion.so/my-integrations</strong><br>
-      2. Click + New integration → name it "Word Sidebar"<br>
-      3. Copy the token that starts with <code>secret_</code><br>
-      4. In Notion, open your Recommendations Bank → ··· → Add connections → select your integration
-    </div>
+    <input type="password" id="tokenInput" placeholder="ntn_xxxx or secret_xxxx">
+    <div class="field-hint">From notion.so/my-integrations → your integration → copy the token. Make sure you've granted it access to your Recommendations Bank page.</div>
   </div>
-
   <div class="field">
     <label>Database ID</label>
-    <input type="text" id="dbInput" placeholder="32-character database ID">
-    <div class="field-hint">Already filled with your Recommendations Bank ID. Only change if you use a different database.</div>
+    <input type="text" id="dbInput">
+    <div class="field-hint">Pre-filled with your Recommendations Bank ID.</div>
   </div>
-
   <div class="field">
-    <label>Default insert language</label>
+    <label>Default copy mode</label>
     <select id="modeInput">
       <option value="clinical">Clinical language</option>
       <option value="plain">Plain language (parent-friendly)</option>
       <option value="both">Both</option>
     </select>
   </div>
-
   <button class="setup-save" onclick="saveSetup()">Save & Load Recommendations</button>
   <div class="setup-status" id="setupStatus"></div>
 </div>
 
-<!-- Header -->
 <div class="header">
   <div class="header-inner">
     <div class="header-text">
       <h1>Recommendations Bank</h1>
-      <p id="headerSub">Sophie Ty</p>
+      <p id="headerSub">Master</p>
     </div>
     <div class="header-actions">
       <button class="icon-btn" title="Refresh" onclick="refresh()">↻</button>
@@ -347,26 +148,20 @@ body {
   </div>
 </div>
 
-<!-- Search -->
 <div class="search-section">
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input class="search-input" type="text" id="searchInput"
-      placeholder="Search by keyword, e.g. 'extended time', 'visual supports'…"
-      oninput="applyFilters()">
+    <input class="search-input" type="text" id="searchInput" placeholder="Search recommendations…" oninput="applyFilters()">
   </div>
 </div>
 
-<!-- Filters -->
 <div class="filters" id="filtersEl"></div>
 
-<!-- Toolbar -->
 <div class="toolbar">
   <span class="count" id="countEl">—</span>
-  <button class="clear-btn" onclick="clearAll()">Clear all filters</button>
+  <button class="clear-btn" onclick="clearAll()">Clear filters</button>
 </div>
 
-<!-- List -->
 <div class="rec-list" id="recList">
   <div class="state">
     <div class="state-icon">📋</div>
@@ -375,80 +170,57 @@ body {
   </div>
 </div>
 
-<!-- How-to bar -->
-<div class="how-to">
-  💡 Click a card to expand → copy clinical or plain language → paste into Word with Ctrl+V
-</div>
-
-<!-- Toast -->
+<div class="how-to">💡 Click a card → Copy clinical → paste into Word with Ctrl+V</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Constants ──────────────────────────────────────────────────────────────
-const DB_ID    = 'a93cb0d9cbff43249c11d55d5bee28cb'; // Your Recommendations Bank
+const DB_ID    = 'a93cb0d9cbff43249c11d55d5bee28cb';
 const LS_TOKEN = 'rb_notion_token';
 const LS_DB    = 'rb_notion_db';
 const LS_MODE  = 'rb_mode';
+// Use a CORS proxy to reach Notion API
+const PROXY    = 'https://corsproxy.io/?';
 
-// ── State ─────────────────────────────────────────────────────────────────
-let allRecs   = [];
-let filtered  = [];
-let openId    = null;
-let filters   = { domain: null, setting: null, lang: null };
+let allRecs = [], filtered = [], openId = null;
+let filters = { domain:null, setting:null, lang:null };
 
-// ── Init ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  // Pre-fill DB ID in setup
-  document.getElementById('dbInput').value = localStorage.getItem(LS_DB) || DB_ID;
+  document.getElementById('dbInput').value    = localStorage.getItem(LS_DB)    || DB_ID;
   document.getElementById('tokenInput').value = localStorage.getItem(LS_TOKEN) || '';
   document.getElementById('modeInput').value  = localStorage.getItem(LS_MODE)  || 'clinical';
-
   const token = localStorage.getItem(LS_TOKEN);
   const db    = localStorage.getItem(LS_DB) || DB_ID;
   if (token) fetchRecs(token, db);
   else openSetup();
 });
 
-// ── Setup ─────────────────────────────────────────────────────────────────
 function openSetup() { document.getElementById('setupPanel').classList.add('open'); }
 function closeSetup() { document.getElementById('setupPanel').classList.remove('open'); }
 
 function saveSetup() {
-  const token = document.getElementById('tokenInput').value.trim();
-  const db    = document.getElementById('dbInput').value.trim().replace(/-/g,'') || DB_ID;
-  const mode  = document.getElementById('modeInput').value;
+  const token  = document.getElementById('tokenInput').value.trim();
+  const db     = document.getElementById('dbInput').value.trim().replace(/-/g,'') || DB_ID;
+  const mode   = document.getElementById('modeInput').value;
   const status = document.getElementById('setupStatus');
-
-  if (!token) {
-    status.textContent = 'Please enter your Notion Integration Token.';
-    status.className = 'setup-status err';
-    return;
-  }
-
+  if (!token) { status.textContent='Please enter your token.'; status.className='setup-status err'; return; }
   localStorage.setItem(LS_TOKEN, token);
-  localStorage.setItem(LS_DB,    db);
-  localStorage.setItem(LS_MODE,  mode);
-
-  status.textContent = '✓ Saved — connecting to Notion…';
-  status.className = 'setup-status ok';
-
+  localStorage.setItem(LS_DB, db);
+  localStorage.setItem(LS_MODE, mode);
+  status.textContent='✓ Saved — connecting…';
+  status.className='setup-status ok';
   setTimeout(() => { closeSetup(); fetchRecs(token, db); }, 700);
 }
 
-// ── Fetch ─────────────────────────────────────────────────────────────────
 async function fetchRecs(token, db) {
   setLoading();
   try {
     const pages = [];
     let cursor;
+    const notionUrl = `https://api.notion.com/v1/databases/${db}/query`;
     do {
-      const body = {
-        page_size: 100,
-        sorts: [{ property: 'Frequency Used', direction: 'descending' }]
-      };
+      const body = { page_size:100, sorts:[{ property:'Frequency Used', direction:'descending' }] };
       if (cursor) body.start_cursor = cursor;
-
-      const res = await fetch(`https://api.notion.com/v1/databases/${db}/query`, {
+      const res = await fetch(PROXY + encodeURIComponent(notionUrl), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -457,20 +229,14 @@ async function fetchRecs(token, db) {
         },
         body: JSON.stringify(body),
       });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || `Notion error ${res.status}`);
-      }
-
+      if (!res.ok) { const e = await res.json(); throw new Error(e.message || `Error ${res.status}`); }
       const data = await res.json();
       pages.push(...data.results);
       cursor = data.has_more ? data.next_cursor : null;
     } while (cursor);
 
     allRecs = pages.map(parseRec).filter(Boolean);
-    document.getElementById('headerSub').textContent =
-      `${allRecs.length} recommendations · Sophie Ty`;
+    document.getElementById('headerSub').textContent = `${allRecs.length} recommendations · Master`;
     buildFilters();
     applyFilters();
   } catch(e) {
@@ -483,15 +249,12 @@ function parseRec(page) {
   const clinical = p['Recommendation']?.title?.[0]?.plain_text || '';
   if (!clinical) return null;
   return {
-    id:       page.id,
-    clinical,
-    plain:    p['Plain Language Version']?.rich_text?.[0]?.plain_text || '',
-    domain:   p['Domain']?.multi_select?.map(x => x.name) || [],
-    setting:  p['Setting']?.multi_select?.map(x => x.name) || [],
-    diag:     p['Diagnosis / Profile']?.multi_select?.map(x => x.name) || [],
-    lang:     p['Language']?.select?.name || 'English',
-    freq:     p['Frequency Used']?.number || 0,
-    notes:    p['Notes']?.rich_text?.[0]?.plain_text || '',
+    id: page.id, clinical,
+    plain:   p['Plain Language Version']?.rich_text?.[0]?.plain_text || '',
+    domain:  p['Domain']?.multi_select?.map(x => x.name) || [],
+    setting: p['Setting']?.multi_select?.map(x => x.name) || [],
+    lang:    p['Language']?.select?.name || 'English',
+    freq:    p['Frequency Used']?.number || 0,
   };
 }
 
@@ -501,42 +264,30 @@ function refresh() {
   if (token) fetchRecs(token, db);
 }
 
-// ── Filters ───────────────────────────────────────────────────────────────
 function buildFilters() {
   const domains  = [...new Set(allRecs.flatMap(r => r.domain))].sort();
   const settings = [...new Set(allRecs.flatMap(r => r.setting))].sort();
   const langs    = [...new Set(allRecs.map(r => r.lang))].sort();
-
-  document.getElementById('filtersEl').innerHTML = `
-    ${filterGroup('Domain',   domains,  'domain')}
-    ${filterGroup('Setting',  settings, 'setting')}
-    ${filterGroup('Language', langs,    'lang')}
-  `;
+  document.getElementById('filtersEl').innerHTML =
+    fg('Domain', domains, 'domain') + fg('Setting', settings, 'setting') + fg('Language', langs, 'lang');
 }
 
-function filterGroup(label, values, key) {
+function fg(label, values, key) {
   if (!values.length) return '';
-  return `<div class="filter-group">
-    <div class="filter-label">${label}</div>
-    <div class="chips">
-      ${values.map(v => `<button class="chip" id="chip-${key}-${esc(v)}"
-        onclick="toggleFilter('${key}','${v}')">${v}</button>`).join('')}
-    </div>
-  </div>`;
+  return `<div class="filter-group"><div class="filter-label">${label}</div><div class="chips">
+    ${values.map(v => `<button class="chip" id="chip-${key}-${esc(v)}" onclick="toggleFilter('${key}','${v}')">${v}</button>`).join('')}
+  </div></div>`;
 }
 
 function toggleFilter(key, val) {
   filters[key] = filters[key] === val ? null : val;
   document.querySelectorAll(`[id^="chip-${key}-"]`).forEach(c => c.classList.remove('active'));
-  if (filters[key]) {
-    const el = document.getElementById(`chip-${key}-${esc(val)}`);
-    if (el) el.classList.add('active');
-  }
+  if (filters[key]) { const el = document.getElementById(`chip-${key}-${esc(val)}`); if (el) el.classList.add('active'); }
   applyFilters();
 }
 
 function clearAll() {
-  filters = { domain: null, setting: null, lang: null };
+  filters = { domain:null, setting:null, lang:null };
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   document.getElementById('searchInput').value = '';
   applyFilters();
@@ -548,126 +299,69 @@ function applyFilters() {
     if (filters.domain  && !r.domain.includes(filters.domain))   return false;
     if (filters.setting && !r.setting.includes(filters.setting))  return false;
     if (filters.lang    && r.lang !== filters.lang)               return false;
-    if (q && !r.clinical.toLowerCase().includes(q) &&
-             !r.plain.toLowerCase().includes(q) &&
-             !r.domain.join(' ').toLowerCase().includes(q)) return false;
+    if (q && !r.clinical.toLowerCase().includes(q) && !r.plain.toLowerCase().includes(q)) return false;
     return true;
   });
-  document.getElementById('countEl').textContent =
-    `${filtered.length} recommendation${filtered.length !== 1 ? 's' : ''}`;
+  document.getElementById('countEl').textContent = `${filtered.length} recommendation${filtered.length!==1?'s':''}`;
   renderList();
 }
 
-// ── Render ────────────────────────────────────────────────────────────────
 function renderList() {
   const el = document.getElementById('recList');
   if (!filtered.length) {
-    el.innerHTML = `<div class="state">
-      <div class="state-icon">🔍</div>
-      <h3>No matches</h3>
-      <p>Try different keywords or clear your filters.</p>
-    </div>`;
+    el.innerHTML = `<div class="state"><div class="state-icon">🔍</div><h3>No matches</h3><p>Try different keywords or clear filters.</p></div>`;
     return;
   }
-
   el.innerHTML = filtered.map(r => {
     const isOpen = r.id === openId;
     const domTags  = r.domain.slice(0,2).map(d => `<span class="tag t-domain">${d}</span>`).join('');
     const setTags  = r.setting.slice(0,1).map(s => `<span class="tag t-setting">${s}</span>`).join('');
-    const langTag  = r.lang === 'French'
-      ? `<span class="tag t-lang-fr">FR</span>`
-      : `<span class="tag t-lang-en">EN</span>`;
-    const freqTag  = r.freq > 10
-      ? `<span class="tag t-freq">Used ${r.freq}×</span>` : '';
-
-    return `<div class="rec-card ${isOpen ? 'open' : ''}" id="card-${r.id}"
-         onclick="toggleCard('${r.id}')">
+    const langTag  = r.lang==='French' ? `<span class="tag t-lang-fr">FR</span>` : `<span class="tag t-lang-en">EN</span>`;
+    const freqTag  = r.freq>10 ? `<span class="tag t-freq">Used ${r.freq}×</span>` : '';
+    return `<div class="rec-card ${isOpen?'open':''}" id="card-${r.id}" onclick="toggleCard('${r.id}')">
       <div class="rec-clinical">${r.clinical}</div>
-      ${r.plain ? `<div class="rec-plain">
-        <div class="rec-plain-label">Plain language version</div>
-        ${r.plain}
-      </div>` : ''}
+      ${r.plain?`<div class="rec-plain"><div class="rec-plain-label">Plain language</div>${r.plain}</div>`:''}
       <div class="rec-tags">${domTags}${setTags}${langTag}${freqTag}</div>
-      ${isOpen ? `<div class="rec-actions">
-        <button class="action-btn primary" id="btn-c-${r.id}"
-          onclick="event.stopPropagation(); copyText('${r.id}','clinical')">
-          📋 Copy clinical
-        </button>
-        ${r.plain ? `<button class="action-btn" id="btn-p-${r.id}"
-          onclick="event.stopPropagation(); copyText('${r.id}','plain')">
-          💬 Copy plain
-        </button>` : ''}
-        ${r.plain ? `<button class="action-btn" id="btn-b-${r.id}"
-          onclick="event.stopPropagation(); copyText('${r.id}','both')">
-          Copy both
-        </button>` : ''}
-      </div>` : ''}
+      ${isOpen?`<div class="rec-actions">
+        <button class="action-btn primary" id="btn-c-${r.id}" onclick="event.stopPropagation();copyText('${r.id}','clinical')">📋 Copy clinical</button>
+        ${r.plain?`<button class="action-btn" id="btn-p-${r.id}" onclick="event.stopPropagation();copyText('${r.id}','plain')">💬 Copy plain</button>`:''}
+        ${r.plain?`<button class="action-btn" id="btn-b-${r.id}" onclick="event.stopPropagation();copyText('${r.id}','both')">Copy both</button>`:''}
+      </div>`:''}
     </div>`;
   }).join('');
 }
 
-// ── Interactions ──────────────────────────────────────────────────────────
 function toggleCard(id) {
-  openId = openId === id ? null : id;
+  openId = openId===id ? null : id;
   renderList();
-  if (openId) {
-    setTimeout(() => {
-      const card = document.getElementById(`card-${id}`);
-      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 40);
-  }
+  if (openId) setTimeout(() => { const c=document.getElementById(`card-${id}`); if(c) c.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 40);
 }
 
 async function copyText(id, mode) {
-  const r = allRecs.find(x => x.id === id);
+  const r = allRecs.find(x => x.id===id);
   if (!r) return;
-
-  let text = '';
-  if (mode === 'clinical') text = r.clinical;
-  else if (mode === 'plain') text = r.plain || r.clinical;
-  else text = r.clinical + (r.plain ? `\n\nIn plain language: ${r.plain}` : '');
-
+  let text = mode==='clinical' ? r.clinical : mode==='plain' ? (r.plain||r.clinical) : r.clinical+(r.plain?`\n\nIn plain language: ${r.plain}`:'');
   try {
     await navigator.clipboard.writeText(text);
-    const btnId = mode === 'both' ? `btn-b-${id}` : mode === 'plain' ? `btn-p-${id}` : `btn-c-${id}`;
+    const btnId = mode==='both'?`btn-b-${id}`:mode==='plain'?`btn-p-${id}`:`btn-c-${id}`;
     const btn = document.getElementById(btnId);
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 1500);
-    }
+    if (btn) { const orig=btn.innerHTML; btn.innerHTML='✓ Copied!'; btn.classList.add('copied'); setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');},1500); }
     showToast('Copied — paste into Word with Ctrl+V');
-  } catch(e) {
-    showToast('Select the text above and copy manually');
-  }
+  } catch(e) { showToast('Copy failed — try selecting text manually'); }
 }
 
-// ── UI helpers ────────────────────────────────────────────────────────────
 function setLoading() {
-  document.getElementById('recList').innerHTML =
-    `<div class="state"><div class="spinner"></div><p>Loading from Notion…</p></div>`;
-  document.getElementById('countEl').textContent = 'Loading…';
+  document.getElementById('recList').innerHTML=`<div class="state"><div class="spinner"></div><p>Loading from Notion…</p></div>`;
+  document.getElementById('countEl').textContent='Loading…';
 }
-
 function showError(msg) {
-  document.getElementById('recList').innerHTML = `
-    <div class="state">
-      <div class="state-icon">⚠️</div>
-      <h3>Connection failed</h3>
-      <p>${msg}</p><br>
-      <button class="action-btn" onclick="openSetup()" style="margin:0 auto;">Open Settings</button>
-    </div>`;
+  document.getElementById('recList').innerHTML=`<div class="state"><div class="state-icon">⚠️</div><h3>Connection failed</h3><p>${msg}</p><br><button class="action-btn" onclick="openSetup()" style="margin:0 auto;">Open Settings</button></div>`;
 }
-
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
 }
-
-function esc(s) { return s.replace(/[^a-zA-Z0-9]/g, '-'); }
+function esc(s) { return s.replace(/[^a-zA-Z0-9]/g,'-'); }
 </script>
 </body>
 </html>
